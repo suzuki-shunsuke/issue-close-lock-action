@@ -1,0 +1,45 @@
+name: issue-close-lock
+description: Close and lock an GitHub Issue
+inputs:
+  github_token:
+    description: GitHub Access Token
+    required: false
+    default: ${{ github.token }}
+  issue_number:
+    description: Issue Number
+    required: true
+  is_close:
+    description: If true, issue is closed
+    required: false
+    default: "true"
+  is_lock:
+    description: If true, issue is locked
+    required: false
+    default: "true"
+  message:
+    description: If the message is set, the message is posted to the issue as a comment
+    required: false
+runs:
+  using: composite
+  steps:
+    - name: Post a comment to the issue
+      run: gh -R "$GITHUB_REPOSITORY" issue comment "${{inputs.issue_number}}" --body "$BODY"
+      shell: bash
+      if: inputs.message != ''
+      env:
+        GITHUB_TOKEN: ${{inputs.github_token}}
+        BODY: ${{inputs.message}}
+
+    - name: Close the issue
+      run: gh -R "$GITHUB_REPOSITORY" issue close "${{inputs.issue_number}}"
+      shell: bash
+      if: fromJSON(inputs.is_close)
+      env:
+        GITHUB_TOKEN: ${{inputs.github_token}}
+
+    - name: Lock the issue
+      run: gh -R "$GITHUB_REPOSITORY" issue lock "${{inputs.issue_number}}"
+      if: fromJSON(inputs.is_lock)
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{inputs.github_token}}
