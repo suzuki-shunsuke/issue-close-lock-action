@@ -2,6 +2,8 @@
 
 Close and lock GitHub Issues automatically to keep Issues maintainable
 
+![image](https://user-images.githubusercontent.com/13323303/236376582-547f36e9-316c-4ee4-b79d-3dc972550611.png)
+
 [action.yaml](action.yaml)
 
 ## Requirements
